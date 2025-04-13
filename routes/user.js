@@ -5,7 +5,7 @@ const {
   createNewUser,
 } = require("../controllers/user");
 
-const router = express.Router();
+const router = express.Router(); // Creates a small router to define API endpoints.
 
 router.get("/", getAllUsers);
 router.get("/:id", getAllUsersById);

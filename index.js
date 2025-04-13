@@ -15,12 +15,31 @@ connectToMongo("mongodb://127.0.0.1:27017/app-user").then(() =>
 // MongoDB connection is asynchronous, meaning: It takes time (maybe milliseconds or seconds)
 // You don't want the server to start before it's ready So: .then() waits for the connection to finish.
 
+// app.use(...) This is Express’ way of adding middleware or routing logic
+
 // MIDDLEWARE : This allows Express to understand incoming JSON (body of POST/PUT requests :  A receptionist learning to understand written English. Without it, she can’t read the form
-app.use(express.json());
+app.use(express.json()); // if u remove it You won’t be able to read POST request body.
 
 // ROUTES :  Routes setup (after JSON middleware so it can parse req.body)
-app.use("/users", Router); //  All /users URLs are handled by the Router
+app.use("/users", Router); // It tells Express:Whenever someone visits a URL that starts with /users, please handle it using the logic
+//  inside the Router we imported from routes/user.js
+// This is the base URL path. // Means: Only requests starting with /users will be passed to the Route // ❌ /products → Router won’t handle it.
 
+/*
+Behind the Scenes: What Actually Happens?
+Request comes to your server: GET /users/123
+
+Express checks: Is there a route that handles /users?
+Sees this line: app.use("/users", Router)
+Sends control to routes/user.js
+
+In that file, it finds:
+router.get("/:id", getAllUsersById)
+
+Controller runs the logic. Response is sent.
+
+BUT IF if a POST request comes in, Express needs to parse the JSON body first (i.e., use express.json()) before handing it to the router.
+*/
 app.listen(PORT, () => {
   console.log(`Started started at localhost:${PORT}`);
 });
